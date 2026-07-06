@@ -1,6 +1,7 @@
 import { ArrowRight, Building2, Package, Truck } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { getHubStats, WAREHOUSES } from '../data/mockData'
+import { buildViewUrl } from '../hooks/useQueryParam'
 
 const PORTALS = [
   {
@@ -9,6 +10,7 @@ const PORTALS = [
     description: 'Schedule grid, approve carrier requests, yard control tower, and customer records.',
     icon: Building2,
     className: 'portal-card__icon--company',
+    tab: 'schedule',
   },
   {
     id: 'carrier',
@@ -16,6 +18,8 @@ const PORTALS = [
     description: 'Book dock appointments with trip & PO, then self check-in at the yard gate.',
     icon: Truck,
     className: 'portal-card__icon--carrier',
+    tab: 'book',
+    tabKey: 'carrierTab',
   },
   {
     id: 'customer',
@@ -23,6 +27,7 @@ const PORTALS = [
     description: 'Track POs, appointment status, and freight history for shippers and consignees.',
     icon: Package,
     className: 'portal-card__icon--customer',
+    tab: 'dashboard',
   },
 ]
 
@@ -58,12 +63,13 @@ export default function PortalHub() {
         <div className="portal-hub__cards">
           {PORTALS.map((p) => {
             const Icon = p.icon
+            const tabParam = p.tabKey || 'tab'
             return (
               <button
                 key={p.id}
                 type="button"
                 className="portal-card"
-                onClick={() => navigate(`/?view=${p.id}`)}
+                onClick={() => navigate(buildViewUrl(p.id, { [tabParam]: p.tab }))}
               >
                 <div className={`portal-card__icon ${p.className}`}>
                   <Icon size={18} />

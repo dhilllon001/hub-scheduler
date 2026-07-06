@@ -124,7 +124,9 @@ export function getAppointmentsForSlot(warehouseId, doorId, date, slot) {
 export function getYardKpis() {
   const active = checkins.filter((c) => !c.released)
   const waiting = active.filter((c) => c.status === 'Waiting').length
-  const atDoor = active.filter((c) => c.status === 'At Door' || c.status === 'Loading').length
+  const atDoor = active.filter((c) =>
+    ['At Door', 'Loading', 'Unloading'].includes(c.status),
+  ).length
   const avgDwell =
     active.length > 0
       ? Math.round(active.reduce((s, c) => s + c.dwellMinutes, 0) / active.length)

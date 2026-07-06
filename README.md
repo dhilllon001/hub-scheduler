@@ -2,6 +2,9 @@
 
 Multi-sided dock appointment & yard management SaaS — a high-fidelity prototype for warehouses, carriers, and shippers.
 
+**Live demo:** https://hub-scheduler.vercel.app  
+**GitHub:** https://github.com/dhilllon001/hub-scheduler
+
 ## Quick start
 
 ```bash

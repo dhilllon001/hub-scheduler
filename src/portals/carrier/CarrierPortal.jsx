@@ -1,20 +1,15 @@
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { CalendarPlus, Home, MapPin } from 'lucide-react'
 import BookAppointment from './BookAppointment'
 import YardCheckIn from './YardCheckIn'
 import { CARRIERS } from '../../data/mockData'
+import { useQueryParam } from '../../hooks/useQueryParam'
 
 const carrier = CARRIERS.find((c) => c.id === 'CAR-004')
 
 export default function CarrierPortal() {
-  const [params, setParams] = useSearchParams()
+  const [tab, setTab] = useQueryParam('carrierTab', 'book')
   const navigate = useNavigate()
-  const tab = params.get('carrierTab') || 'book'
-
-  const setTab = (id) => {
-    params.set('carrierTab', id)
-    setParams(params)
-  }
 
   return (
     <div className="portal-shell">
@@ -39,7 +34,7 @@ export default function CarrierPortal() {
         </button>
       </header>
       <main className="portal-main">
-        {tab === 'book' ? <BookAppointment /> : <YardCheckIn />}
+        {tab === 'yard' ? <YardCheckIn /> : <BookAppointment />}
       </main>
     </div>
   )

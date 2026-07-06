@@ -1,4 +1,4 @@
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   Bell,
   Calendar,
@@ -11,16 +11,19 @@ import {
 } from 'lucide-react'
 import { getPendingRequestCount } from '../../stores/appStore'
 import { TODAY, WAREHOUSES } from '../../data/mockData'
+import { useQueryParam } from '../../hooks/useQueryParam'
 import ScheduleGrid from './ScheduleGrid'
 import RequestsInbox from './RequestsInbox'
 import YardView from './YardView'
 import CustomersView from './CustomersView'
+import WarehouseView from './WarehouseView'
 
 const NAV = [
   { id: 'schedule', label: 'Schedule', icon: Calendar },
   { id: 'requests', label: 'Appointments', icon: ClipboardList, badge: true },
   { id: 'yard', label: 'Yard', icon: Truck },
   { id: 'customers', label: 'Customers', icon: Users },
+  { id: 'warehouse', label: 'Warehouse', icon: Settings },
 ]
 
 const TAB_META = {
@@ -28,6 +31,7 @@ const TAB_META = {
   requests: { title: 'Appointment Requests', subtitle: 'Carrier-submitted bookings awaiting approval' },
   yard: { title: 'Yard Control', subtitle: 'Live check-ins, dwell times, and gate status' },
   customers: { title: 'Customers', subtitle: 'Shippers and consignees moving freight through the dock' },
+  warehouse: { title: 'Warehouse Setup', subtitle: 'Doors, hours, and site configuration' },
 }
 
 const TABS = {
@@ -35,21 +39,16 @@ const TABS = {
   requests: RequestsInbox,
   yard: YardView,
   customers: CustomersView,
+  warehouse: WarehouseView,
 }
 
 export default function CompanyPortal() {
-  const [params, setParams] = useSearchParams()
+  const [tab, setTab] = useQueryParam('tab', 'schedule')
   const navigate = useNavigate()
-  const tab = params.get('tab') || 'schedule'
   const View = TABS[tab] || ScheduleGrid
   const pending = getPendingRequestCount()
-  const meta = TAB_META[tab]
+  const meta = TAB_META[tab] || TAB_META.schedule
   const warehouse = WAREHOUSES[0]
-
-  const setTab = (id) => {
-    params.set('tab', id)
-    setParams(params)
-  }
 
   return (
     <div className="portal-shell">
@@ -93,11 +92,6 @@ export default function CompanyPortal() {
               </button>
             )
           })}
-          <div className="portal-sidebar__section">Configuration</div>
-          <button type="button" className="portal-sidebar__link">
-            <Settings size={15} />
-            Warehouse
-          </button>
         </nav>
         <main className="portal-main">
           <header className="page-header">
